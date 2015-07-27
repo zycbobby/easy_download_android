@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,9 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -39,6 +39,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.model.Thing;
+import uk.co.ribot.androidboilerplate.ui.adapter.ThingItemViewHolder;
+import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 
 /**
@@ -52,7 +54,7 @@ public class SearchFragment extends Fragment {
     EditText searchBar;
 
     @Bind(R.id.searchResult)
-    ListView searchResultListView;
+    RecyclerView searchResultListView;
 
     private RequestQueue queue;
 
@@ -85,8 +87,10 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        searchResultListView.setAdapter(new ThingListAdapter(searchThings));
-
+        EasyRecyclerAdapter<Thing> adapter = new EasyRecyclerAdapter<>(this.getActivity(), ThingItemViewHolder.class);
+        adapter.setItems(searchThings);
+        searchResultListView.setAdapter(adapter);
+        searchResultListView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         return view;
     }
 
@@ -148,7 +152,7 @@ public class SearchFragment extends Fragment {
                                 // Log.d(TAG, thing.toString());
                             }
 
-                            ((ThingListAdapter) searchResultListView.getAdapter()).notifyDataSetChanged();
+                            ((EasyRecyclerAdapter<Thing>) searchResultListView.getAdapter()).notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -164,7 +168,7 @@ public class SearchFragment extends Fragment {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
-                        String creds = String.format("%s:%s", R.string.es_username, R.string.es_password);
+                        String creds = String.format("%s:%s", getString(R.string.es_username), getString(R.string.es_password));
                         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                         params.put("Authorization", auth);
                         return params;
@@ -179,27 +183,27 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    public class ThingListAdapter extends ArrayAdapter<Thing> {
-        TextView crimeTitle;
-        TextView crimeDate;
-
-        public ThingListAdapter(List<Thing> things) {
-            super(getActivity(), 0, things);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.item_thing, null);
-            }
-
-            crimeTitle = (TextView) convertView.findViewById(R.id.title);
-            crimeDate = (TextView) convertView.findViewById(R.id.time);
-
-            Thing c = (Thing) searchResultListView.getAdapter().getItem(position);
-            crimeTitle.setText(c.getTitle());
-            crimeDate.setText(c.getUrl());
-            return convertView;
-        }
-    }
+//    public class ThingListAdapter extends ArrayAdapter<Thing> {
+//        TextView crimeTitle;
+//        TextView crimeDate;
+//
+//        public ThingListAdapter(List<Thing> things) {
+//            super(getActivity(), 0, things);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            if (convertView == null) {
+//                convertView = getActivity().getLayoutInflater().inflate(R.layout.item_thing, null);
+//            }
+//
+//            crimeTitle = (TextView) convertView.findViewById(R.id.title);
+//            crimeDate = (TextView) convertView.findViewById(R.id.time);
+//
+//            Thing c = (Thing) searchResultListView.getAdapter().getItem(position);
+//            crimeTitle.setText(c.getTitle());
+//            crimeDate.setText(c.getUrl());
+//            return convertView;
+//        }
+//    }
 }
