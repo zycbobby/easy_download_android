@@ -19,6 +19,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
+import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.model.Thing;
 
 /**
@@ -58,6 +59,7 @@ public class ElasticSearchHelper {
                 "                    }\n" +
                 "                }\n" +
                 "            }");
+
         String creds = String.format("%s:%s", "zuo", "22216785");
         final String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
 

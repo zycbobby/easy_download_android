@@ -129,6 +129,7 @@ dependencies {
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile 'com.crashlytics.android:crashlytics:1.1.13'
     compile 'com.mcxiaoke.volley:library:1.0.15'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
 
     // Espresso
     androidTestCompile 'com.android.support:support-annotations:22.2.1'
