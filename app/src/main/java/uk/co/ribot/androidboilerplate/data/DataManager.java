@@ -4,11 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
-import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.data.remote.RetrofitHelper;
-import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 import com.squareup.otto.Bus;
 
 import java.util.List;
@@ -17,6 +12,13 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.functions.Action0;
 import rx.functions.Func1;
+import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
+import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.data.model.Thing;
+import uk.co.ribot.androidboilerplate.data.remote.ElasticSearchHelper;
+import uk.co.ribot.androidboilerplate.data.remote.RetrofitHelper;
+import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 
 public class DataManager {
 
@@ -66,6 +68,10 @@ public class DataManager {
                         return mDatabaseHelper.setRibots(ribots);
                     }
                 });
+    }
+
+    public Observable<List<Thing>> searchThings(String keyword) {
+        return ElasticSearchHelper.search(keyword);
     }
 
     public Observable<List<Ribot>> getRibots() {

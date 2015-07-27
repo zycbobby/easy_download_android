@@ -15,5 +15,4 @@ public class RetrofitHelper {
                 .build();
         return restAdapter.create(RibotsService.class);
     }
-
 }

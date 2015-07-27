@@ -15,7 +15,7 @@ public class Thing {
     private String url;
     private String[] images;
 
-    private Thing(String title, String url, String[] images) {
+    public Thing(String title, String url, String[] images) {
         this.title = title;
         this.url = url;
         this.images = images;
