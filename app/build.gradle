@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId "uk.co.ribot.androidboilerplate"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 22
         testInstrumentationRunner "uk.co.ribot.androidboilerplate.util.UnlockDeviceTestRunner"
         versionCode 1000

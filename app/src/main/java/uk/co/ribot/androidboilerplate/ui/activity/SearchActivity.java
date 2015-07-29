@@ -8,12 +8,9 @@ import uk.co.ribot.androidboilerplate.ui.fragment.SearchFragment;
 
 public class SearchActivity extends SingleFragmentActivity {
 
-    public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_MESSAGE = "message";
-    public static final String KEY_EXTRAS = "extras";
-
     public static boolean isForeground = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
