@@ -1,7 +1,16 @@
 package uk.co.ribot.androidboilerplate;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.util.Log;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import cn.jpush.android.api.JPushInterface;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 
 import rx.schedulers.Schedulers;
@@ -19,6 +28,11 @@ public class AndroidBoilerplateApplication extends Application {
 
         setApplicationStaticInstance(this);
         mDataManager = new DataManager(this, Schedulers.io());
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
+
+        JPushInterface.init(getApplicationContext());
     }
 
     @Override
@@ -40,6 +54,5 @@ public class AndroidBoilerplateApplication extends Application {
     private static void setApplicationStaticInstance(AndroidBoilerplateApplication application) {
         sAndroidBoilerplateApplication = application;
     }
-
 }
 
