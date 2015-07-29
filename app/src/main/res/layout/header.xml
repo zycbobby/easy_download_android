@@ -5,8 +5,6 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -37,7 +35,6 @@
             android:text="akash.bangad93@gmail.com"
             android:textSize="14sp"
             android:textStyle="normal"
-
             />
     </LinearLayout>
 </RelativeLayout>
