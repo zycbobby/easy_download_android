@@ -8,7 +8,10 @@ apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.github.triplet.play'
 
 //Setup distribution options, based on local variable $ANDROID_DISTRIBUTION
-enum DISTRIBUTION_CHANNEL { CRASHLYTICS, PLAY }
+enum DISTRIBUTION_CHANNEL {
+    CRASHLYTICS, PLAY
+}
+
 def distribution = System.getenv("ANDROID_DISTRIBUTION")
 def distributionChannel
 def distributionGroup
@@ -98,6 +101,12 @@ android {
     //Needed because of this https://github.com/square/okio/issues/58
     lintOptions {
         warning 'InvalidPackage'
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
     }
 
 }
