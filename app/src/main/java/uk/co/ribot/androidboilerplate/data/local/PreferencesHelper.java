@@ -18,4 +18,14 @@ public class PreferencesHelper {
         mPref.edit().clear().apply();
     }
 
+    public void put(String key, String value) {
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public String get(String key) {
+        return mPref.getString(key, "");
+    }
+
 }

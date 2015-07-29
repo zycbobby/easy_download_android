@@ -1,6 +1,7 @@
 package uk.co.ribot.androidboilerplate.data;
 
 import android.content.Context;
+import android.media.browse.MediaBrowser;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -16,13 +17,16 @@ import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.data.model.Thing;
+import uk.co.ribot.androidboilerplate.data.model.User;
 import uk.co.ribot.androidboilerplate.data.remote.ElasticSearchHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RetrofitHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
+import uk.co.ribot.androidboilerplate.data.remote.UserService;
 
 public class DataManager {
 
     private RibotsService mRibotsService;
+    private UserService mUserService;
     private DatabaseHelper mDatabaseHelper;
     private PreferencesHelper mPreferencesHelper;
     private Scheduler mScheduler;
@@ -30,6 +34,7 @@ public class DataManager {
 
     public DataManager(Context context, Scheduler scheduler) {
         mRibotsService = new RetrofitHelper().setupRibotsService();
+        mUserService = new RetrofitHelper().setupUserService();
         mDatabaseHelper = new DatabaseHelper(context);
         mPreferencesHelper = new PreferencesHelper(context);
         mBus = new Bus();
@@ -98,4 +103,10 @@ public class DataManager {
         });
     }
 
+    /***
+     * user part
+     */
+    public Observable<User> createOrUpdate(User user) {
+        return mUserService.createOrUpdate(user);
+    }
 }

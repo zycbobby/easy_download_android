@@ -131,7 +131,8 @@
 
         <!-- User defined.  For test only  用户自定义的广播接收器-->
         <receiver
-            android:name="uk.co.ribot.androidboilerplate.ui.receiver.MyReceiver" >
+            android:name="uk.co.ribot.androidboilerplate.ui.receiver.MyReceiver"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
                 <action android:name="cn.jpush.android.intent.UNREGISTRATION" />

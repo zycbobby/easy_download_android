@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -53,8 +54,5 @@ public class AndroidBoilerplateApplication extends Application {
     private static void setApplicationStaticInstance(AndroidBoilerplateApplication application) {
         sAndroidBoilerplateApplication = application;
     }
-
-
-
 }
 

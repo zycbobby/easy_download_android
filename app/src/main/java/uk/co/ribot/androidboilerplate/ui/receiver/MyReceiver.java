@@ -10,6 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
+import rx.functions.Action1;
+import uk.co.ribot.androidboilerplate.AndroidBoilerplateApplication;
+import uk.co.ribot.androidboilerplate.data.DataManager;
+import uk.co.ribot.androidboilerplate.data.model.User;
 import uk.co.ribot.androidboilerplate.ui.activity.SearchActivity;
 import uk.co.ribot.androidboilerplate.util.ExampleUtil;
 
@@ -23,6 +27,33 @@ import uk.co.ribot.androidboilerplate.util.ExampleUtil;
 public class MyReceiver extends BroadcastReceiver {
     private static final String TAG = "JPush";
 
+    private DataManager mDataManager;
+
+    public MyReceiver(){
+        super();
+        mDataManager = AndroidBoilerplateApplication.get().getDataManager();
+
+        // if it has been registered(most of the time)
+        String registrationID = JPushInterface.getRegistrationID(AndroidBoilerplateApplication.get());
+        if (null != registrationID) {
+            selfRegisterToEasyDownloadServer(registrationID);
+        }
+    }
+
+    private void selfRegisterToEasyDownloadServer(String regId) {
+        // get user name somewhere
+        String myName = "zuozuo";
+        String[] myTags = {"nike", "adidas"};
+        User zuozuo = new User(myName, regId, myTags);
+        mDataManager.createOrUpdate(zuozuo).subscribe(new Action1<User>() {
+            @Override
+            public void call(User user) {
+                Log.i(TAG, "user " + user + " registered");
+            }
+        });
+    }
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -31,7 +62,8 @@ public class MyReceiver extends BroadcastReceiver {
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-            //send the Registration Id to your server...
+            //send the Registration Id to your server... with your username
+            selfRegisterToEasyDownloadServer(regId);
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
@@ -81,24 +113,6 @@ public class MyReceiver extends BroadcastReceiver {
 
     //send msg to MainActivity
     private void processCustomMessage(Context context, Bundle bundle) {
-        if (SearchActivity.isForeground) {
-            String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-            Intent msgIntent = new Intent(SearchActivity.MESSAGE_RECEIVED_ACTION);
-            msgIntent.putExtra(SearchActivity.KEY_MESSAGE, message);
-            if (!ExampleUtil.isEmpty(extras)) {
-                try {
-                    JSONObject extraJson = new JSONObject(extras);
-                    if (null != extraJson && extraJson.length() > 0) {
-                        msgIntent.putExtra(SearchActivity.KEY_EXTRAS, extras);
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, e.toString());
-                }
-
-            }
-            context.sendBroadcast(msgIntent);
-        }
         Log.d(TAG, "[MyReceiver] processCustomMessage");
     }
 }
