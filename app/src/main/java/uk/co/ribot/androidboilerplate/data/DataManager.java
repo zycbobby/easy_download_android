@@ -42,7 +42,6 @@ public class DataManager {
         mUserService = new RetrofitHelper().setupUserService();
         mDatabaseHelper = new DatabaseHelper(context);
         mPreferencesHelper = new PreferencesHelper(context);
-        // mBus = new MainThreadBus();
         mBus = new Bus();
         mScheduler = scheduler;
         runtimeData = RuntimeData.INSTANCE;
@@ -104,7 +103,7 @@ public class DataManager {
         };
     }
 
-    // Helper method to post an event from a different thread to the main one.
+    // Helper method to post an event from a different thread to the main one. That's why this function is private, we need to make sure it is in the Main Looper
     private void postEventSafely(final Object event) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
