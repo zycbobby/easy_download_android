@@ -22,9 +22,6 @@ public class ThingItemViewHolder extends ItemViewHolder<Thing> {
     @ViewId(R.id.text_name)
     TextView mName;
 
-    @ViewId(R.id.text_role)
-    TextView mRole;
-
     ImageLoader imageLoader;
 
     public ThingItemViewHolder(View view) {
@@ -37,5 +34,4 @@ public class ThingItemViewHolder extends ItemViewHolder<Thing> {
         imageLoader.displayImage(thing.getImages()[0], imageView);
         mName.setText(thing.getTitle());
     }
-
 }
