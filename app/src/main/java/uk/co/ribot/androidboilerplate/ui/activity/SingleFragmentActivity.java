@@ -1,62 +1,56 @@
 package uk.co.ribot.androidboilerplate.ui.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import uk.co.ribot.androidboilerplate.R;
-import uk.co.ribot.androidboilerplate.ui.adapter.MyAdapter;
 
 /**
  * Created by zuo on 15-7-21.
  */
-public abstract class SingleFragmentActivity extends ActionBarActivity {
+public abstract class SingleFragmentActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
+    @Bind(R.id.tool_bar)
+    Toolbar toolbar;
 
-    String TITLES[] = {"Home","Events","Mail","Shop","Travel"};
-    int ICONS[] = {R.drawable.abc_ic_clear_mtrl_alpha
-            ,R.drawable.abc_ic_clear_mtrl_alpha
-            ,R.drawable.abc_ic_clear_mtrl_alpha
-            ,R.drawable.abc_ic_clear_mtrl_alpha
-            ,R.drawable.abc_ic_clear_mtrl_alpha};
 
-    //Similarly we Create a String Resource for the name and email in the header view
-    //And we also create a int resource for profile picture in the header view
-
-    String NAME = "Akash Bangad";
-    String EMAIL = "akash.bangad@android4devs.com";
-    int PROFILE = R.drawable.abc_ic_clear_mtrl_alpha;
-
-    RecyclerView mRecyclerView;                           // Declaring RecyclerView
-    RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
-    RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
-    DrawerLayout Drawer;                                  // Declaring DrawerLayout
+    @Bind(R.id.drawer_container)
+    DrawerLayout mDrawer;                                  // Declaring DrawerLayout
 
     ActionBarDrawerToggle mDrawerToggle;
+
+    @Bind(R.id.navigation_view)
+    NavigationView navigationView;
 
     public abstract int getLayout();
 
     /**
      * this method can be overriden
+     *
      * @return fragment container
      */
     public int getFragmentMountPoint() {
         return R.id.fragmentContainer;
-    };
+    }
+
+    ;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(this.getLayout());
+        ButterKnife.bind(this);
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(this.getFragmentMountPoint());
         if (fragment == null) {
@@ -67,25 +61,20 @@ public abstract class SingleFragmentActivity extends ActionBarActivity {
         /**
          * Replace the acitonbar with toolbar
          */
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.nav_menu); // Assigning the RecyclerView Object to the xml View
-        mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                System.out.println(menuItem.toString());
+                return false;
+            }
+        });
 
-        mAdapter = new MyAdapter(TITLES,ICONS,NAME,EMAIL,PROFILE);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
-        // And passing the titles,icons,header view name, header view email,
-        // and header view profile picture
-
-        mRecyclerView.setAdapter(mAdapter);                              // Setting the adapter to RecyclerView
-
-        mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
-
-        mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
-
-
-        Drawer = (DrawerLayout) findViewById(R.id.DrawerLayout);        // Drawer object Assigned to the view
-        mDrawerToggle = new ActionBarDrawerToggle(this,Drawer,toolbar,R.string.openDrawer,R.string.closeDrawer){
+        /**
+         * This part is key for showing the hummer icon
+         */
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.openDrawer, R.string.closeDrawer) {
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -99,13 +88,9 @@ public abstract class SingleFragmentActivity extends ActionBarActivity {
                 super.onDrawerClosed(drawerView);
                 // Code here will execute once drawer is closed
             }
-
-
-
         }; // Drawer Toggle Object Made
-        Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
+        mDrawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();
-
 
     }
 
