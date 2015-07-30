@@ -1,12 +1,10 @@
 package uk.co.ribot.androidboilerplate.data;
 
 import android.content.Context;
-import android.media.browse.MediaBrowser;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -111,6 +109,7 @@ public class DataManager {
                 mBus.post(event);
             }
         });
+
     }
 
     /***
