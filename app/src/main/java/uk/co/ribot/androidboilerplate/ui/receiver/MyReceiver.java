@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.squareup.otto.Produce;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +16,7 @@ import rx.functions.Action1;
 import uk.co.ribot.androidboilerplate.AndroidBoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.model.User;
+import uk.co.ribot.androidboilerplate.event.UserUpdateEvent;
 import uk.co.ribot.androidboilerplate.ui.activity.SearchActivity;
 import uk.co.ribot.androidboilerplate.util.ExampleUtil;
 
@@ -33,6 +36,8 @@ public class MyReceiver extends BroadcastReceiver {
         super();
         mDataManager = AndroidBoilerplateApplication.get().getDataManager();
 
+        mDataManager.getBus().register(this);
+
         // if it has been registered(most of the time)
         String registrationID = JPushInterface.getRegistrationID(AndroidBoilerplateApplication.get());
         if (null != registrationID) {
@@ -45,12 +50,8 @@ public class MyReceiver extends BroadcastReceiver {
         String myName = "zuozuo";
         String[] myTags = {"nike", "adidas"};
         User zuozuo = new User(myName, regId, myTags);
-        mDataManager.createOrUpdate(zuozuo).subscribe(new Action1<User>() {
-            @Override
-            public void call(User user) {
-                Log.i(TAG, "user " + user + " registered");
-            }
-        });
+        //mDataManager.getOnUserUpdateAction()
+        mDataManager.createOrUpdate(zuozuo).subscribe(mDataManager.getOnUserUpdateAction());
     }
 
 
@@ -114,5 +115,11 @@ public class MyReceiver extends BroadcastReceiver {
     //send msg to MainActivity
     private void processCustomMessage(Context context, Bundle bundle) {
         Log.d(TAG, "[MyReceiver] processCustomMessage");
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        mDataManager.getBus().unregister(this);
+        super.finalize();
     }
 }
