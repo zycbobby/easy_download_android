@@ -1,5 +1,6 @@
 package uk.co.ribot.androidboilerplate.ui.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,10 +9,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.ribot.androidboilerplate.AndroidBoilerplateApplication;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 
@@ -33,6 +36,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     @Bind(R.id.name)
     TextView nameTextView;
+
 
     DataManager mDataManager;
 
@@ -71,6 +75,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.openDrawer, R.string.closeDrawer);
         mDrawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
         mDrawerToggle.syncState();
+        mDataManager = AndroidBoilerplateApplication.get().getDataManager();
     }
 
     protected abstract Fragment createFragment();

@@ -3,14 +3,9 @@ package uk.co.ribot.androidboilerplate.ui.activity;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.squareup.otto.Subscribe;
-
-import uk.co.ribot.androidboilerplate.AndroidBoilerplateApplication;
 import uk.co.ribot.androidboilerplate.R;
-import uk.co.ribot.androidboilerplate.event.UserUpdateEvent;
 import uk.co.ribot.androidboilerplate.ui.fragment.SearchFragment;
 import uk.co.ribot.androidboilerplate.ui.fragment.SubscribeFragment;
 
@@ -20,6 +15,7 @@ public class SearchActivity extends SingleFragmentActivity {
 
     public static boolean isForeground = false;
 
+
     Fragment searchFragment;
     Fragment subscribeFragment;
 
@@ -27,7 +23,6 @@ public class SearchActivity extends SingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.subscribeFragment = new SubscribeFragment();
-        final SearchActivity context = this;
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -35,10 +30,10 @@ public class SearchActivity extends SingleFragmentActivity {
                 int id = menuItem.getItemId();
                 switch (id) {
                     case R.id.action_search:
-                        replaceFragment(context.searchFragment);
+                        replaceFragment(searchFragment);
                         break;
                     case R.id.action_subscribe:
-                        replaceFragment(context.subscribeFragment);
+                        replaceFragment(subscribeFragment);
                         break;
                 }
                 mDrawer.closeDrawers();
@@ -46,7 +41,7 @@ public class SearchActivity extends SingleFragmentActivity {
             }
         });
 
-        mDataManager = AndroidBoilerplateApplication.get().getDataManager();
+        nameTextView.setText(mDataManager.getRuntimeData().getUser().getName());
     }
 
     @Override

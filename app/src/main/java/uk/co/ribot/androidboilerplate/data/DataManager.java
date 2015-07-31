@@ -120,11 +120,4 @@ public class DataManager {
         return mUserService.createOrUpdate(user);
     }
 
-//    public Observable<User> getCurrentUser() {
-//
-//    }
-
-    public Observable<User> getUser(String registerId) {
-        return mUserService.getUser(registerId);
-    }
 }

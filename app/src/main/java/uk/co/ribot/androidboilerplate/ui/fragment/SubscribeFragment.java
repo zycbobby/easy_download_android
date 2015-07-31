@@ -65,24 +65,28 @@ public class SubscribeFragment extends Fragment {
         adapter = new EasyRecyclerAdapter<>(getActivity(), TagItemViewHolder.class);
         tagsList.setAdapter(adapter);
         tagsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mSubscriptions.add(bindActivity(this.getActivity(), createTagsObservable()).subscribeOn(dataManager.getScheduler()).subscribe(onUserGet()));
+
+        tags = dataManager.getRuntimeData().getUser().getTags();
+        List<String> strings = Arrays.asList(tags);
+        adapter.setItems(strings);
+
         return view;
     }
 
-    private Observable<User> createTagsObservable() {
-        return dataManager.getUser(JPushInterface.getRegistrationID(this.getActivity()));
-    }
-
-    public Action1<User> onUserGet() {
-        return new Action1<User>() {
-            @Override
-            public void call(User user) {
-                tags = user.getTags();
-                List<String> strings = Arrays.asList(tags);
-                adapter.setItems(strings);
-            }
-        };
-    }
+//    private Observable<User> createTagsObservable() {
+//        return dataManager.getUser(JPushInterface.getRegistrationID(this.getActivity()));
+//    }
+//
+//    public Action1<User> onUserGet() {
+//        return new Action1<User>() {
+//            @Override
+//            public void call(User user) {
+//                tags = user.getTags();
+//                List<String> strings = Arrays.asList(tags);
+//                adapter.setItems(strings);
+//            }
+//        };
+//    }
 
     @Override
     public void onDestroyView() {

@@ -2,9 +2,6 @@ package uk.co.ribot.androidboilerplate.data.model;
 
 import java.util.Arrays;
 
-/**
- * Created by zuo on 15-7-29.
- */
 public class User {
 
     private String name;
@@ -39,6 +36,22 @@ public class User {
 
     public void setTags(String[] tags) {
         this.tags = tags;
+    }
+
+    public void addTags(String tag) {
+        boolean b = true;
+        String[] newTags = new String[tags.length + 1];
+        for (int i = 0; i < tags.length; i++) {
+            String t = tags[i];
+            if (tags.equals(t)) {
+                b = false;
+            }
+            newTags[i] = tags[i];
+        }
+        if (b) {
+            newTags[newTags.length - 1] = tag;
+            tags = newTags;
+        }
     }
 
     @Override
