@@ -26,6 +26,7 @@ import uk.co.ribot.androidboilerplate.AndroidBoilerplateApplication;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.model.Thing;
+import uk.co.ribot.androidboilerplate.data.model.User;
 import uk.co.ribot.androidboilerplate.ui.adapter.ThingItemViewHolder;
 import uk.co.ribot.androidboilerplate.util.ViewUtil;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
@@ -101,7 +102,12 @@ public class SearchFragment extends Fragment {
             public void call(String word) {
 
                 dataManager.getRuntimeData().getUser().addTags(word);
-                dataManager.createOrUpdate(dataManager.getRuntimeData().getUser());
+                dataManager.createOrUpdate(dataManager.getRuntimeData().getUser()).subscribe(new Action1<User>() {
+                    @Override
+                    public void call(User user) {
+                        System.out.println(user + " updated tags");
+                    }
+                });
 
                 dataManager.searchThings(word)
                         .subscribeOn(dataManager.getScheduler())

@@ -43,10 +43,10 @@ public class User {
         String[] newTags = new String[tags.length + 1];
         for (int i = 0; i < tags.length; i++) {
             String t = tags[i];
-            if (tags.equals(t)) {
+            if (tag.equals(t)) {
                 b = false;
             }
-            newTags[i] = tags[i];
+            newTags[i] = t;
         }
         if (b) {
             newTags[newTags.length - 1] = tag;
