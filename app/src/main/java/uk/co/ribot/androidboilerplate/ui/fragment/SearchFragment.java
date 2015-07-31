@@ -122,8 +122,8 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         ButterKnife.unbind(this);
         mSubscriptions.unsubscribe();
+        super.onDestroyView();
     }
 }

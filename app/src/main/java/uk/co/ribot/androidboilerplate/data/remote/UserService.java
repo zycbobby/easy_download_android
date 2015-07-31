@@ -11,8 +11,8 @@ public interface UserService {
 
     String ENDPOINT = "http://172.26.142.29:9000/api";
 
-    @GET("/users/{userName}")
-    Observable<User> getUser(@Path("userName") String userName);
+    @GET("/users/{registerId}")
+    Observable<User> getUser(@Path("registerId") String registerId);
 
     @PUT("/users")
     Observable<User> createOrUpdate(@Body User user);

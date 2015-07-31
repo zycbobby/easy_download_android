@@ -8,6 +8,7 @@ import com.squareup.otto.Bus;
 
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
 import rx.Observable;
 import rx.Scheduler;
 import rx.functions.Action0;
@@ -117,6 +118,10 @@ public class DataManager {
      */
     public Observable<User> createOrUpdate(User user) {
         return mUserService.createOrUpdate(user);
+    }
+
+    public Observable<User> getUser(String registerId) {
+        return mUserService.getUser(registerId);
     }
 
     /**
