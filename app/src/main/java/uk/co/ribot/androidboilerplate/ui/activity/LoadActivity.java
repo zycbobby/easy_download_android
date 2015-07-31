@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import butterknife.ButterKnife;
 import cn.jpush.android.api.JPushInterface;
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -57,30 +56,37 @@ public class LoadActivity extends AppCompatActivity {
 
                 // self register
                 System.out.println("can be register now : " + registrationID);
-                Observable<User> userObservable = selfRegisterToEasyDownloadServer(registrationID).observeOn(AndroidSchedulers.mainThread());
-                userObservable.subscribe(new Action1<User>() {
+                final String registerIdTobeRegiseter = registrationID;
+                Observable<User> userObservable = getUser(registrationID).observeOn(AndroidSchedulers.mainThread());
+                userObservable.subscribe(onUserRegistered(), new Action1<Throwable>() {
                     @Override
-                    public void call(User user) {
-                        mDataManager.getRuntimeData().setUser(user);
-
-                        Intent i = new Intent(self, SearchActivity.class );
-                        // refer https://stackoverflow.com/questions/3473168/clear-the-entire-history-stack-and-start-a-new-activity-on-android
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        self.startActivity(i);
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                        mDataManager.createOrUpdate(new User(registerIdTobeRegiseter, registerIdTobeRegiseter, new String[]{})).subscribe(onUserRegistered());
                     }
                 });
             }
         });
+    }
 
+    private Action1<User> onUserRegistered(){
+        final Context self = this;
+        return new Action1<User>() {
+            @Override
+            public void call(User user) {
+                mDataManager.getRuntimeData().setUser(user);
+                Intent i = new Intent(self, SearchActivity.class);
+                // refer https://stackoverflow.com/questions/3473168/clear-the-entire-history-stack-and-start-a-new-activity-on-android
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
+            }
+        };
     }
 
 
-    private Observable<User> selfRegisterToEasyDownloadServer(String regId) {
+    private Observable<User> getUser(String regId) {
         // get user name somewhere
-        String myName = "unknow";
-        String[] myTags = {"nike", "adidas"};
-        User zuozuo = new User(myName, regId, myTags);
-        return mDataManager.createOrUpdate(zuozuo);
+        return mDataManager.getUser(regId);
     }
 
     @Override
