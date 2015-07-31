@@ -120,22 +120,11 @@ public class DataManager {
         return mUserService.createOrUpdate(user);
     }
 
+//    public Observable<User> getCurrentUser() {
+//
+//    }
+
     public Observable<User> getUser(String registerId) {
         return mUserService.getUser(registerId);
-    }
-
-    /**
-     * it is very important to post the event here, because if you post in {@class uk.co.ribot.androidboilerplate.ui.receiver.MyReceiver},
-     * the looper is another looper
-     * @return
-     */
-    public Action1<User> getOnUserUpdateAction() {
-        return new Action1<User>() {
-            @Override
-            public void call(User user) {
-                runtimeData.setUser(user);
-                postEventSafely(new UserUpdateEvent(user));
-            }
-        };
     }
 }

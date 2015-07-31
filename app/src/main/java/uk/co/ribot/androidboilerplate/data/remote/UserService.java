@@ -2,6 +2,7 @@ package uk.co.ribot.androidboilerplate.data.remote;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import rx.Observable;

@@ -65,8 +65,6 @@ public class SearchActivity extends SingleFragmentActivity {
     @Override
     protected void onResume() {
         isForeground = true;
-        mDataManager.getBus().register(this);
-        System.out.println("register");
         super.onResume();
     }
 
@@ -74,19 +72,11 @@ public class SearchActivity extends SingleFragmentActivity {
     @Override
     protected void onPause() {
         isForeground = false;
-        mDataManager.getBus().unregister(this);
-        System.out.println("unregister");
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Subscribe
-    public void onRuntimeUserFix(UserUpdateEvent userUpdateEvent) {
-        String name = userUpdateEvent.getUser().getName() == null? userUpdateEvent.getUser().getRegisterId():userUpdateEvent.getUser().getName();
-        nameTextView.setText(name);
     }
 }

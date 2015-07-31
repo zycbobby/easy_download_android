@@ -35,25 +35,7 @@ public class MyReceiver extends BroadcastReceiver {
     public MyReceiver(){
         super();
         mDataManager = AndroidBoilerplateApplication.get().getDataManager();
-
-        mDataManager.getBus().register(this);
-
-        // if it has been registered(most of the time)
-        String registrationID = JPushInterface.getRegistrationID(AndroidBoilerplateApplication.get());
-        if (null != registrationID) {
-            selfRegisterToEasyDownloadServer(registrationID);
-        }
     }
-
-    private void selfRegisterToEasyDownloadServer(String regId) {
-        // get user name somewhere
-        String myName = "zuozuo";
-        String[] myTags = {"nike", "adidas"};
-        User zuozuo = new User(myName, regId, myTags);
-        //mDataManager.getOnUserUpdateAction()
-        mDataManager.createOrUpdate(zuozuo).subscribe(mDataManager.getOnUserUpdateAction());
-    }
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -64,8 +46,6 @@ public class MyReceiver extends BroadcastReceiver {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             //send the Registration Id to your server... with your username
-            selfRegisterToEasyDownloadServer(regId);
-
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
             processCustomMessage(context, bundle);
@@ -119,7 +99,6 @@ public class MyReceiver extends BroadcastReceiver {
 
     @Override
     protected void finalize() throws Throwable {
-        mDataManager.getBus().unregister(this);
         super.finalize();
     }
 }
