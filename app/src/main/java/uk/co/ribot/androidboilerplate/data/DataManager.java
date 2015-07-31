@@ -1,7 +1,6 @@
 package uk.co.ribot.androidboilerplate.data;
 
 import android.content.Context;
-import android.media.browse.MediaBrowser;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -9,12 +8,15 @@ import com.squareup.otto.Bus;
 
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
 import rx.Observable;
 import rx.Scheduler;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
+import uk.co.ribot.androidboilerplate.data.local.RuntimeData;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.data.model.Thing;
 import uk.co.ribot.androidboilerplate.data.model.User;
@@ -22,6 +24,7 @@ import uk.co.ribot.androidboilerplate.data.remote.ElasticSearchHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RetrofitHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 import uk.co.ribot.androidboilerplate.data.remote.UserService;
+import uk.co.ribot.androidboilerplate.event.UserUpdateEvent;
 
 public class DataManager {
 
@@ -31,6 +34,7 @@ public class DataManager {
     private PreferencesHelper mPreferencesHelper;
     private Scheduler mScheduler;
     private Bus mBus;
+    private RuntimeData runtimeData;
 
     public DataManager(Context context, Scheduler scheduler) {
         mRibotsService = new RetrofitHelper().setupRibotsService();
@@ -39,6 +43,7 @@ public class DataManager {
         mPreferencesHelper = new PreferencesHelper(context);
         mBus = new Bus();
         mScheduler = scheduler;
+        runtimeData = RuntimeData.INSTANCE;
     }
 
     public void setRibotsService(RibotsService ribotsService) {
@@ -63,6 +68,10 @@ public class DataManager {
 
     public Bus getBus() {
         return mBus;
+    }
+
+    public RuntimeData getRuntimeData() {
+        return runtimeData;
     }
 
     public Observable<Ribot> syncRibots() {
@@ -93,7 +102,7 @@ public class DataManager {
         };
     }
 
-    // Helper method to post an event from a different thread to the main one.
+    // Helper method to post an event from a different thread to the main one. That's why this function is private, we need to make sure it is in the Main Looper
     private void postEventSafely(final Object event) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -101,6 +110,7 @@ public class DataManager {
                 mBus.post(event);
             }
         });
+
     }
 
     /***
@@ -108,5 +118,9 @@ public class DataManager {
      */
     public Observable<User> createOrUpdate(User user) {
         return mUserService.createOrUpdate(user);
+    }
+
+    public Observable<User> getUser(String regId) {
+        return mUserService.getUser(regId);
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ import uk.co.ribot.androidboilerplate.AndroidBoilerplateApplication;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.model.Thing;
+import uk.co.ribot.androidboilerplate.data.model.User;
 import uk.co.ribot.androidboilerplate.ui.adapter.ThingItemViewHolder;
 import uk.co.ribot.androidboilerplate.util.ViewUtil;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
@@ -47,9 +47,10 @@ public class SearchFragment extends Fragment {
     @Bind(R.id.searchResult)
     RecyclerView searchResultListView;
 
-    private DataManager mDataManager;
     private CompositeSubscription mSubscriptions;
     private EasyRecyclerAdapter<Thing> adapter;
+
+    DataManager dataManager;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -68,10 +69,9 @@ public class SearchFragment extends Fragment {
         searchResultListView.setAdapter(adapter);
         searchResultListView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        mDataManager = AndroidBoilerplateApplication.get().getDataManager();
+        dataManager = AndroidBoilerplateApplication.get().getDataManager();
         mSubscriptions = new CompositeSubscription();
-
-        mSubscriptions.add(bindActivity(this.getActivity(), createSearchObservable(searchBar)).subscribeOn(mDataManager.getScheduler()).subscribe(onQueryEntered()));
+        mSubscriptions.add(bindActivity(this.getActivity(), createSearchObservable(searchBar)).subscribeOn(dataManager.getScheduler()).subscribe(onQueryEntered()));
 
         return view;
     }
@@ -100,8 +100,17 @@ public class SearchFragment extends Fragment {
         return new Action1<String>() {
             @Override
             public void call(String word) {
-                mDataManager.searchThings(word)
-                        .subscribeOn(mDataManager.getScheduler())
+
+                dataManager.getRuntimeData().getUser().addTags(word);
+                dataManager.createOrUpdate(dataManager.getRuntimeData().getUser()).subscribe(new Action1<User>() {
+                    @Override
+                    public void call(User user) {
+                        System.out.println(user + " updated tags");
+                    }
+                });
+
+                dataManager.searchThings(word)
+                        .subscribeOn(dataManager.getScheduler())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Action1<List<Thing>>() {
                             @Override
@@ -122,8 +131,8 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         ButterKnife.unbind(this);
         mSubscriptions.unsubscribe();
+        super.onDestroyView();
     }
 }

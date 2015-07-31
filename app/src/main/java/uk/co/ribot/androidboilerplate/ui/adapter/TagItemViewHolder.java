@@ -13,25 +13,19 @@ import uk.co.ribot.easyadapter.PositionInfo;
 import uk.co.ribot.easyadapter.annotations.LayoutId;
 import uk.co.ribot.easyadapter.annotations.ViewId;
 
-@LayoutId(R.layout.item_thing)
-public class ThingItemViewHolder extends ItemViewHolder<Thing> {
+@LayoutId(R.layout.item_tag)
+public class TagItemViewHolder extends ItemViewHolder<String> {
 
-    @ViewId(R.id.view_hex_color)
-    ImageView imageView;
 
-    @ViewId(R.id.text_name)
+    @ViewId(R.id.tag_name)
     TextView mName;
 
-    ImageLoader imageLoader;
-
-    public ThingItemViewHolder(View view) {
+    public TagItemViewHolder(View view) {
         super(view);
-        imageLoader = ImageLoader.getInstance(); // Get singleton instance
     }
 
     @Override
-    public void onSetValues(Thing thing, PositionInfo positionInfo) {
-        imageLoader.displayImage(thing.getImages()[0], imageView);
-        mName.setText(thing.getTitle());
+    public void onSetValues(String tag, PositionInfo positionInfo) {
+        mName.setText(tag);
     }
 }
