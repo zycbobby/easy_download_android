@@ -64,6 +64,8 @@ public class LoadActivity extends AppCompatActivity {
                         mDataManager.getRuntimeData().setUser(user);
 
                         Intent i = new Intent(self, SearchActivity.class );
+                        // refer https://stackoverflow.com/questions/3473168/clear-the-entire-history-stack-and-start-a-new-activity-on-android
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         self.startActivity(i);
                     }
                 });
