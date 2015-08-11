@@ -53,6 +53,11 @@
             android:label="@string/app_name">
         </activity>
 
+        <activity
+            android:name="uk.co.ribot.androidboilerplate.ui.activity.DetailActivity"
+            android:label="@string/app_name">
+        </activity>
+
         <!--<service android:name="uk.co.ribot.androidboilerplate.data.SyncService"/>-->
 
         <receiver
