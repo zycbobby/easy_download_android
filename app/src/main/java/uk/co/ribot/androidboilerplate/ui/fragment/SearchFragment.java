@@ -99,15 +99,7 @@ public class SearchFragment extends Fragment {
     private Action1<String> onQueryEntered() {
         return new Action1<String>() {
             @Override
-            public void call(String word) {
-
-                dataManager.getRuntimeData().getUser().addTags(word);
-                dataManager.createOrUpdate(dataManager.getRuntimeData().getUser()).subscribe(new Action1<User>() {
-                    @Override
-                    public void call(User user) {
-                        System.out.println(user + " updated tags");
-                    }
-                });
+            public void call(final String word) {
 
                 dataManager.searchThings(word)
                         .subscribeOn(dataManager.getScheduler())
@@ -116,6 +108,16 @@ public class SearchFragment extends Fragment {
                             @Override
                             public void call(List<Thing> things) {
                                 adapter.setItems(things);
+
+                                if (things.size() > 0) {
+                                    dataManager.getRuntimeData().getUser().addTags(word);
+                                    dataManager.createOrUpdate(dataManager.getRuntimeData().getUser()).subscribe(new Action1<User>() {
+                                        @Override
+                                        public void call(User user) {
+                                            System.out.println(user + " updated tags");
+                                        }
+                                    });
+                                }
                             }
 
                         }, new Action1<Throwable>() {
