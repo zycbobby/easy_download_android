@@ -3,33 +3,25 @@ package uk.co.ribot.androidboilerplate.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daimajia.swipe.adapters.ArraySwipeAdapter;
+
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.jpush.android.api.JPushInterface;
-import rx.Observable;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 import uk.co.ribot.androidboilerplate.AndroidBoilerplateApplication;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.DataManager;
-import uk.co.ribot.androidboilerplate.data.model.Thing;
-import uk.co.ribot.androidboilerplate.data.model.User;
 import uk.co.ribot.androidboilerplate.ui.adapter.TagItemViewHolder;
-import uk.co.ribot.androidboilerplate.ui.adapter.ThingItemViewHolder;
-import uk.co.ribot.androidboilerplate.util.DialogFactory;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
-
-import static rx.android.app.AppObservable.bindActivity;
 
 
 /**
@@ -63,6 +55,7 @@ public class SubscribeFragment extends Fragment {
         mSubscriptions = new CompositeSubscription();
         dataManager = AndroidBoilerplateApplication.get().getDataManager();
         adapter = new EasyRecyclerAdapter<>(getActivity(), TagItemViewHolder.class);
+
         tagsList.setAdapter(adapter);
         tagsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
