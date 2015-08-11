@@ -1,6 +1,7 @@
 package uk.co.ribot.androidboilerplate.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -22,21 +23,6 @@ import uk.co.ribot.androidboilerplate.data.DataManager;
  * Created by zuo on 15-7-21.
  */
 public abstract class SingleFragmentActivity extends AppCompatActivity {
-
-    @Bind(R.id.tool_bar)
-    Toolbar toolbar;
-
-    @Bind(R.id.drawer_container)
-    DrawerLayout mDrawer;                                  // Declaring DrawerLayout
-
-    ActionBarDrawerToggle mDrawerToggle;
-
-    @Bind(R.id.navigation_view)
-    NavigationView navigationView;
-
-    @Bind(R.id.name)
-    TextView nameTextView;
-
 
     DataManager mDataManager;
 
@@ -60,25 +46,13 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(this.getFragmentMountPoint());
         if (fragment == null) {
-            fragment = this.createFragment();
+            fragment = this.createFragment(savedInstanceState, getIntent());
             fm.beginTransaction().add(this.getFragmentMountPoint(), fragment).commit();
         }
-
-        /**
-         * Replace the acitonbar with toolbar
-         */
-        setSupportActionBar(toolbar);
-
-        /**
-         * This part is key for showing the hummer icon
-         */
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.openDrawer, R.string.closeDrawer);
-        mDrawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
-        mDrawerToggle.syncState();
         mDataManager = AndroidBoilerplateApplication.get().getDataManager();
     }
 
-    protected abstract Fragment createFragment();
+    protected abstract Fragment createFragment(Bundle savedInstanceState, Intent intent);
 
     public void replaceFragment(Fragment f) {
         getSupportFragmentManager().beginTransaction()
