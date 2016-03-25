@@ -65,32 +65,14 @@ public class ElasticSearchHelper {
 
             @Override
             public void call(Subscriber<? super List<Thing>> subscriber) {
-                Request request = new Request.Builder()
-                        .url("http://es.misscatandzuozuo.info/mongoindex/thing/_search")
-                        .post(body)
-                        .addHeader("Authorization", auth)
-                        .build();
 
-                try {
-                    System.out.println(request.body().toString());
-                    Response resp = client.newCall(request).execute();
-                    if (resp.isSuccessful()) {
-                        JSONArray jsonArray = new JSONObject(resp.body().string()).getJSONObject("hits").getJSONArray("hits");
-                        List<Thing> things = new ArrayList<>();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject _thing = jsonArray.getJSONObject(i).getJSONObject("_source");
-                            Thing thing = Thing.valueOf(_thing);
-                            things.add(thing);
-                        }
-                        subscriber.onNext(things);
-                        subscriber.onCompleted();
-                    } else {
-                        throw new IOException("Unexpected code " + resp);
-                    }
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
-                }
+              List<Thing> things = new ArrayList<>();
+              for (int i = 0; i < 5; i++) {
+                  Thing thing = new Thing("Thing title", "http://www.baidu.com", new String[]{"http://i3.hoopchina.com.cn/blogfile/201603/25/BbsImg145888287849389_550x367.jpg"});
+                  things.add(thing);
+              }
+              subscriber.onNext(things);
+              subscriber.onCompleted();
             }
         });
     }
