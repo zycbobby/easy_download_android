@@ -26,7 +26,7 @@ import uk.co.ribot.androidboilerplate.data.model.Thing;
  */
 public class ElasticSearchHelper {
 
-    public static Observable<List<Thing>> search(@NonNull String keyword) {
+    public static Observable<List<Thing>> search(@NonNull final String keyword) {
         final MediaType json = MediaType.parse("application/json; charset=utf-8");
         final OkHttpClient client = new OkHttpClient();
         final RequestBody body = RequestBody.create(json, "{\n" +
@@ -68,7 +68,7 @@ public class ElasticSearchHelper {
 
               List<Thing> things = new ArrayList<>();
               for (int i = 0; i < 5; i++) {
-                  Thing thing = new Thing("Thing title", "http://www.baidu.com", new String[]{"http://i3.hoopchina.com.cn/blogfile/201603/25/BbsImg145888287849389_550x367.jpg"});
+                  Thing thing = new Thing(keyword, "http://www.baidu.com", new String[]{"http://i3.hoopchina.com.cn/blogfile/201603/25/BbsImg145888287849389_550x367.jpg"});
                   things.add(thing);
               }
               subscriber.onNext(things);
